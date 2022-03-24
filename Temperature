@@ -1,0 +1,37 @@
+using System;
+using System.Linq;
+using System.IO;
+using System.Text;
+using System.Collections;
+using System.Collections.Generic;
+
+/**
+ * Auto-generated code below aims at helping you parse
+ * the standard input according to the problem statement.
+ **/
+class Solution
+{
+    static void Main(string[] args)
+    {
+        int resT = 5526; //make defaul the max temp value
+        int n = int.Parse(Console.ReadLine()); // the number of temperatures to analyse
+        if (n == 0) {
+            resT = 0; //if no temps, then zero
+        }
+        string[] inputs = Console.ReadLine().Split(' ');
+        for (int i = 0; i < n; i++)
+        {
+            int t = int.Parse(inputs[i]);// a temperature expressed as an integer ranging from -273 to 5526
+            
+            if ((Math.Abs(t)) < (Math.Abs(resT))) {
+                resT = t; //if the absolute value is closer than current, save this value
+            }
+            else if ((Math.Abs(t)) == (Math.Abs(resT))) {
+                resT = Math.Max(t,resT); //if the two absolute values are the same, choose the one that's positive
+            }
+        }
+        // Write an answer using Console.WriteLine()
+        // To debug: Console.Error.WriteLine("Debug messages...");
+        Console.WriteLine(resT);
+    }
+}
