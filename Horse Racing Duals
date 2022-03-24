@@ -1,0 +1,40 @@
+using System;
+using System.Linq;
+using System.IO;
+using System.Text;
+using System.Collections;
+using System.Collections.Generic;
+
+/**
+ * Auto-generated code below aims at helping you parse
+ * the standard input according to the problem statement.
+ **/
+class Solution
+{
+    static void Main(string[] args)
+    {
+        int diff = int.MaxValue;
+        
+
+        int N = int.Parse(Console.ReadLine());
+        int[]horses = new int[N]; //inserting N number of values into array
+
+        for (int i = 0; i < N; i++)
+        {
+            int pi = int.Parse(Console.ReadLine());
+            Console.Error.WriteLine(pi);
+            horses[i] = pi; //inserting array values
+        }
+
+        Array.Sort(horses); //sort values
+
+        for (int i = 0; i < horses.Length - 1; i++)
+        {
+            diff = Math.Min(diff, horses[i + 1] - horses[i]);
+        }
+        // Write an answer using Console.WriteLine()
+        // To debug: Console.Error.WriteLine("Debug messages...");
+
+        Console.WriteLine(diff);
+    }
+}
