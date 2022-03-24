@@ -1,0 +1,142 @@
+using System;
+using System.Linq;
+using System.IO;
+using System.Text;
+using System.Collections;
+using System.Collections.Generic;
+
+/**
+ * Auto-generated code below aims at helping you parse
+ * the standard input according to the problem statement.
+ **/
+class Player
+{
+    static void Main(string[] args)
+    {
+        string[] inputs;
+        bool boosted = false;
+        bool shielded = false;
+        int prevX = 0;
+        int prevY = 0;
+        int xAim = 0;
+        int yAim = 0;
+        int adjustment = 0;
+        int turn = 0;
+        
+        // game loop
+        while (true)
+        {
+            inputs = Console.ReadLine().Split(' ');
+            int power;
+
+            int x = int.Parse(inputs[0]);
+            int y = int.Parse(inputs[1]);
+            int nextCheckpointX = int.Parse(inputs[2]); // x position of the next check point
+            int nextCheckpointY = int.Parse(inputs[3]); // y position of the next check point
+            int nextCheckpointDist = int.Parse(inputs[4]); // distance to the next checkpoint
+            int nextCheckpointAngle = int.Parse(inputs[5]); // angle between your pod orientation and the direction of the next checkpoint
+            inputs = Console.ReadLine().Split(' ');
+            int opponentX = int.Parse(inputs[0]);
+            int opponentY = int.Parse(inputs[1]);
+
+
+
+            //Calculate Speed
+
+            double speedVal = Math.Sqrt(Math.Pow(x - prevX, 2) + Math.Pow(y - prevY, 2));
+
+            
+            
+            while (turn > 3)
+            {
+                adjustment = Convert.ToInt32(speedVal - 400);
+                break;
+            }
+
+
+            Console.Error.WriteLine("Adjustment is " + adjustment);
+            if (x < nextCheckpointX)
+            {
+                xAim = nextCheckpointX - adjustment;
+            }
+            else if (x > nextCheckpointX)
+            {
+                xAim = nextCheckpointX + adjustment;
+            }
+            else
+            {
+                xAim = nextCheckpointX;
+            }
+
+            if (y < nextCheckpointY)
+            {
+                yAim = nextCheckpointY - adjustment;
+            }
+            else if (y > nextCheckpointY)
+            {
+                yAim = nextCheckpointY + adjustment;
+            }
+            else
+            {
+                yAim = nextCheckpointY;
+            }
+
+            prevX = x;
+            prevY = y;
+            Console.Error.WriteLine("Speed is " + speedVal);
+
+            
+            
+
+            //Opponent tracking
+            //double opponentDist = Math.Sqrt(Math.Pow(x - opponentX, 2) + Math.Pow(y - opponentY, 2));  //distance to opponent
+            //Calculate angle to opponent
+            /*double xdiff;
+            double ydiff;
+            int x1 = x;
+            int y1 = y;
+            int x2 = opponentX;
+            int y2 = opponentY;
+            xdiff = x2 - x1;
+            ydiff = y2 - y1;
+            double opponentAngle = Math.Atan2(ydiff, xdiff) * 180.0 / Math.PI;*/
+            
+
+            // Thrust settings
+                if (nextCheckpointDist <2500 && nextCheckpointAngle >15) //if close and angle is bad, slow down
+                    {    
+                        power = 60 - (Math.Abs(nextCheckpointAngle));
+                        power = Math.Clamp (power, 10, 100); 
+                    }
+                else if (nextCheckpointDist < 2000) //otherwise if close and good angle, slow down less
+                {
+                        power = 60 - (Math.Abs(nextCheckpointAngle));
+                        power = Math.Clamp (power, 40, 100);  
+                }                
+                else
+                    {    
+
+                        power = 120 - (Math.Abs(nextCheckpointAngle)); //otherwise floor it! Based on angle
+                        power = Math.Clamp (power, 30, 100);                        
+                    }
+
+            {
+                // Boost and shield settings
+                if (boosted == false && 5 >= Math.Abs(nextCheckpointAngle) && nextCheckpointDist >= 6000)
+                {
+                    Console.WriteLine(xAim + " " + yAim + " " + "BOOST");
+                    boosted = true;
+                }
+                //else if (opponentDist < 1100 && opponentAngle < 10 && opponentAngle > -10)
+                //{
+                //    Console.WriteLine(nextCheckpointX + " " + nextCheckpointY + " " + "SHIELD");
+                //}
+                else
+                {
+                    Console.WriteLine(xAim + " " + yAim + " " + power);
+                }
+                turn++;
+            }
+        }
+    }
+}
