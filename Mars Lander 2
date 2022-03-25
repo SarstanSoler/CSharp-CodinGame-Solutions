@@ -1,0 +1,121 @@
+using System;
+using System.Linq;
+using System.IO;
+using System.Text;
+using System.Collections;
+using System.Collections.Generic;
+
+/**
+ * Auto-generated code below aims at helping you parse
+ * the standard input according to the problem statement.
+ **/
+class Player
+{
+    static void Main(string[] args)
+    {
+        int prevX = 0;
+        int prevY = 0;
+        int flatA = 0;
+        int flatB = 0;
+        int height = 0;
+        int landX = 0;
+        int landY = 0;
+
+
+        string[] inputs;
+        int surfaceN = int.Parse(Console.ReadLine()); // the number of points used to draw the surface of Mars.
+        for (int i = 0; i < surfaceN; i++)
+        {
+            inputs = Console.ReadLine().Split(' ');
+            landX = int.Parse(inputs[0]); // X coordinate of a surface point. (0 to 6999)
+            landY = int.Parse(inputs[1]); // Y coordinate of a surface point. By linking all the points together in a sequential fashion, you form the surface of Mars.
+            Console.Error.WriteLine(landY);
+
+            if (landY == prevY)     //find flat land and height of it. Compare previous height value to current until they match.
+            {
+                flatA = prevX;
+                flatB = landX;
+                height = prevY;
+            }
+            else
+            {
+                prevY = landY;
+                prevX = landX;
+            }
+
+            Console.Error.WriteLine("Left side of landing zone starts " + flatA);
+            Console.Error.WriteLine("Right side of landing zone stops " + flatB);
+            Console.Error.WriteLine("At height " + height);
+        }
+
+        // game loop
+        while (true)
+        {
+            inputs = Console.ReadLine().Split(' ');
+            int X = int.Parse(inputs[0]);
+            int Y = int.Parse(inputs[1]);
+            int hSpeed = int.Parse(inputs[2]); // the horizontal speed (in m/s), can be negative.
+            int vSpeed = int.Parse(inputs[3]); // the vertical speed (in m/s), can be negative.
+            int fuel = int.Parse(inputs[4]); // the quantity of remaining fuel in liters.
+            int rotate = int.Parse(inputs[5]); // the rotation angle in degrees (-90 to 90).
+            int power = int.Parse(inputs[6]); // the thrust power (0 to 4).
+            int thrust = 0;
+            int rotatee = 0;
+
+            //Safety third! Could move fall velocity higher up in priority and burn more fuel, but it works as it is.
+            if (height > Y - 50)       //If landing zone is higher, gain altitude
+            {
+                rotatee = 0;
+                thrust = 4;
+            }
+            else if (hSpeed > 40)      //slow horizontal speed
+            {
+                rotatee = 35;
+                thrust = 4;
+            }
+            else if (hSpeed < -40)      //slow horizontal speed
+            {
+                rotatee = -35;
+                thrust = 4;
+            }
+            else if (X < flatA)         //move to the landing zone
+            {
+                rotatee = -35;
+                thrust = 4;
+            }
+            else if (X > flatB)         //move to landing zone
+            {
+                rotatee = 35;
+                thrust = 4;
+            }
+            else if (hSpeed > 10)       //slow horizontal speed to land
+            {
+                rotatee = 35;
+                thrust = 4;
+            }
+            else if (hSpeed < -10)      //slow horizontal speed to land
+            {
+                rotatee = -35;
+                thrust = 4;
+            }
+            else if (Math.Abs(vSpeed) > 30) //control fall speed
+            {
+                rotatee = 0;
+                thrust = 4;
+            }
+            else                            //show be over landing zone and little velocity. Just coast down
+            {
+                rotatee = 0;
+                thrust = 3;
+            }
+
+
+            // Write an action using Console.WriteLine()
+            // To debug: Console.Error.WriteLine("Debug messages...");
+
+
+            // rotate power. rotate is the desired rotation angle. power is the desired thrust power.
+            Console.WriteLine(rotatee + " " + thrust);
+        }
+    }
+}
