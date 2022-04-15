@@ -1,0 +1,60 @@
+using System;
+using System.Linq;
+using System.IO;
+using System.Text;
+using System.Collections;
+using System.Collections.Generic;
+
+/**
+ * Auto-generated code below aims at helping you parse
+ * the standard input according to the problem statement.
+ **/
+class Player
+{
+    static void Main(string[] args)
+    {
+        bool rush = false;
+        double moveX = 0;
+        double moveY = 0;
+        int catSpeed = int.Parse(Console.ReadLine());
+
+        //Got tired of trying to get the trigonometry to work. So decided to try shaking the cat for a while.
+        // game loop
+        while (true)
+        {
+            string[] inputs = Console.ReadLine().Split(' ');
+            int mouseX = int.Parse(inputs[0]);
+            int mouseY = int.Parse(inputs[1]);
+            int catX = int.Parse(inputs[2]);
+            int catY = int.Parse(inputs[3]);
+
+            Console.Error.WriteLine("CatSpeed: " + catSpeed);
+            Console.Error.WriteLine("Rush: " + rush);
+
+            if (catY == 0 && rush == false) 
+            {
+                Console.WriteLine(-catX + " " + -catY);
+            }
+            else if (((catX - mouseX) < 70) && ((catX - mouseX)> -70) && (catY > mouseY) || rush == true && catY > mouseY)
+            {
+                moveY = -1000;
+                Console.WriteLine(mouseX + " " + moveY);
+                rush = true;
+            }
+            else if (((catX - mouseX) < 70) && ((catX - mouseX)> -70) && (catY < mouseY) || rush == true && catY < mouseY)
+            {
+                moveY = 1000;
+                Console.WriteLine(mouseX + " " + moveY);
+                rush = true;
+            }
+            else if (catY > 0 && rush == false)
+            {
+                Console.WriteLine(-catX + " " + (-catY - 1500));
+            }
+            else if (catY < 0 && rush == false)
+            {
+                Console.WriteLine(-catX + " " + (-catY + 1500));
+            }
+        }
+    }
+}
