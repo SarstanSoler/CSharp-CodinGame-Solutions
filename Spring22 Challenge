@@ -1,0 +1,142 @@
+using System;
+using System.Linq;
+using System.IO;
+using System.Text;
+using System.Collections;
+using System.Collections.Generic;
+
+/**
+ * Auto-generated code below aims at helping you parse
+ * the standard input according to the problem statement.
+ **/
+class Player
+{
+    static void Main(string[] args)
+    {
+        string[] inputs;
+        inputs = Console.ReadLine().Split(' ');
+        int baseX = int.Parse(inputs[0]); // The corner of the map representing your base
+        int baseY = int.Parse(inputs[1]);
+        int heroesPerPlayer = int.Parse(Console.ReadLine()); // Always 3
+
+        var spiders = new List<Spiders>();
+        var myHeroes = new List<MyHeroes>();
+        var enHeroes = new List<EnHeroes>();
+
+        int targetX = 500;
+        int targetY = 500;
+        double closest = 20000;
+
+
+        // game loop
+        while (true)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                inputs = Console.ReadLine().Split(' ');
+                int health = int.Parse(inputs[0]); // Your base health
+                
+                int mana = int.Parse(inputs[1]); // Ignore in the first league; Spend ten mana to cast a spell
+            }
+            int entityCount = int.Parse(Console.ReadLine()); // Amount of heros and monsters you can see
+            for (int i = 0; i < entityCount; i++)
+            {
+                inputs = Console.ReadLine().Split(' ');
+                int id = int.Parse(inputs[0]); // Unique identifier
+                int type = int.Parse(inputs[1]); // 0=monster, 1=your hero, 2=opponent hero
+                int x = int.Parse(inputs[2]); // Position of this entity
+                int y = int.Parse(inputs[3]);
+                int shieldLife = int.Parse(inputs[4]); // Ignore for this league; Count down until shield spell fades
+                int isControlled = int.Parse(inputs[5]); // Ignore for this league; Equals 1 when this entity is under a control spell
+                int health = int.Parse(inputs[6]); // Remaining health of this monster
+                int vx = int.Parse(inputs[7]); // Trajectory of this monster
+                int vy = int.Parse(inputs[8]);
+                int nearBase = int.Parse(inputs[9]); // 0=monster with no target yet, 1=monster targeting a base
+                int threatFor = int.Parse(inputs[10]); // Given this monster's trajectory, is it a threat to 1=your base, 2=your opponent's base, 0=neither
+
+                //assign entities
+                if (type == 0)
+                {
+                    spiders.Add(new Spiders()
+                    {
+                        sid = id, sx = x, sy = y, sThreat = threatFor, sNear = nearBase,
+                        sDist = Math.Sqrt((Math.Pow(baseX-x, 2) + Math.Pow(baseY-y, 2)))
+                    });
+                }
+
+                if (type == 1)
+                {
+                    myHeroes.Add(new MyHeroes()
+                    {
+                        mid = id, mx = x, my = y
+                    });
+                }
+
+                if (type == 2)
+                {
+                    enHeroes.Add(new EnHeroes()
+                    {
+                        eid = id, ex = x, ey = y
+                    });
+                }
+
+                //check threat level
+
+
+            }
+
+            //check threat level
+            foreach(Spiders s in spiders)
+            {
+                if (s.sThreat == 1 || s.sNear == 1)
+                {
+                    if (closest > s.sDist)
+                    {
+                        targetX = s.sx;
+                        targetY = s.sy;
+                        closest = s.sDist;
+                        
+                    }
+                    else
+                    {
+                        targetX = 500;
+                        targetY = 500;
+                    }
+                }
+            }
+
+
+
+            for (int i = 0; i < heroesPerPlayer; i++)
+            {
+                Console.WriteLine($"MOVE {targetX} {targetY}"); //maybe give separate orders. Multiagent, amirite?
+                // In the first league: MOVE <x> <y> | WAIT; In later leagues: | SPELL <spellParams>;
+            }
+            closest = 20000;
+        }
+    }
+}
+
+public class Spiders
+{
+    public int sid {get;set;}
+    public int sx {get;set;}
+    public int sy {get;set;}
+    public int sThreat {get;set;}
+    public double sDist {get;set;}
+    public double sNear {get;set;}
+}
+
+public class MyHeroes
+{
+    public int mid {get;set;}
+    public int mx {get;set;}
+    public int my {get;set;}
+}
+
+public class EnHeroes
+{
+    public int eid {get;set;}
+    public int ex {get;set;}
+    public int ey {get;set;}
+}
